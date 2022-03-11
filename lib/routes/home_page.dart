@@ -50,7 +50,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         print('Button pressed ...');
                         Navigator.of(context).pushNamed('/games');
                       },
-                      text: 'Games',
+                      text: 'Games TEST',
                       options: FFButtonOptions(
                         width: 270,
                         height: 50,
