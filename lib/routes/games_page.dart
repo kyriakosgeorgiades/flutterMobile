@@ -1,8 +1,9 @@
+import 'package:georgiadek_sem2_flutter/states/user.dart';
+import 'package:provider/provider.dart';
+
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class GamesWidget extends StatefulWidget {
   const GamesWidget({Key key}) : super(key: key);
@@ -14,8 +15,54 @@ class GamesWidget extends StatefulWidget {
 class _GamesWidgetState extends State<GamesWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // getToken(BuildContext context) async {
+  //   CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
+  //   print('Token ${_currentUser.getstorageToken}');
+  //   var token = await _currentUser.getstorageToken;
+  //   print("I AM TOKEN: ${token}");
+  //   return token;
+  // }
+
+  FlutterFlowIconButton getIconStatus(BuildContext context) {
+    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
+    var jwt = _currentUser.getToken;
+    print("status of jwt: ${jwt}");
+    if (jwt != null) {
+      return FlutterFlowIconButton(
+        borderColor: Color.fromARGB(0, 202, 18, 18),
+        borderRadius: 30,
+        borderWidth: 1,
+        buttonSize: 60,
+        icon: Icon(
+          Icons.login,
+          color: Color.fromARGB(255, 252, 38, 0),
+          size: 30,
+        ),
+        onPressed: () async {
+          print('IconButton pressed test');
+        },
+      );
+    } else {
+      return FlutterFlowIconButton(
+        borderColor: Color.fromARGB(0, 202, 18, 18),
+        borderRadius: 30,
+        borderWidth: 1,
+        buttonSize: 60,
+        icon: Icon(
+          Icons.logout,
+          color: Color.fromARGB(255, 0, 0, 0),
+          size: 30,
+        ),
+        onPressed: () async {
+          print('IconButton pressed test');
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -25,22 +72,7 @@ class _GamesWidgetState extends State<GamesWidget> {
           'Games',
           style: FlutterFlowTheme.of(context).title1,
         ),
-        actions: [
-          FlutterFlowIconButton(
-            borderColor: Colors.transparent,
-            borderRadius: 30,
-            borderWidth: 1,
-            buttonSize: 60,
-            icon: Icon(
-              Icons.login_outlined,
-              color: Colors.black,
-              size: 30,
-            ),
-            onPressed: () {
-              print('IconButton pressed ...');
-            },
-          ),
-        ],
+        actions: [getIconStatus(context)],
         centerTitle: false,
         elevation: 0,
       ),

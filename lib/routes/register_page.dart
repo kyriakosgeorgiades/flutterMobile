@@ -1,8 +1,6 @@
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class RegisterWidget extends StatefulWidget {
   const RegisterWidget({Key key}) : super(key: key);
@@ -50,7 +48,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                     image: DecorationImage(
                       fit: BoxFit.cover,
                       image: Image.asset(
-                        'assets/images/logos_console.png',
+                        'assets/images/Kyriakos.png',
                       ).image,
                     ),
                   ),
