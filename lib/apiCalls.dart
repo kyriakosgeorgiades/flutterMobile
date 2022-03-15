@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as htpp;
 
 class CallApi {
@@ -15,5 +14,14 @@ class CallApi {
           'Content-type': 'application/json',
           'Accept': 'application/json'
         });
+  }
+
+  getData(endpoint) async {
+    var fullUrl = _url + endpoint;
+    print("FULL URL: ${fullUrl}");
+    return await htpp.get(Uri.parse(fullUrl), headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    });
   }
 }

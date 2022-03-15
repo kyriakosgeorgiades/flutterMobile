@@ -178,8 +178,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         });
                                         loginUser(textController1.text,
                                             textController2.text, context);
-                                        print("I AM CONTEXT");
-                                        print(context);
+
 
                                         print('Button pressed ...');
                                       },

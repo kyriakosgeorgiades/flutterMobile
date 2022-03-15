@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:georgiadek_sem2_flutter/routes/route_generator.dart';
+import 'package:georgiadek_sem2_flutter/states/games.dart';
+import 'package:georgiadek_sem2_flutter/states/singleGame.dart';
 import 'package:georgiadek_sem2_flutter/states/user.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/internationalization.dart';
@@ -35,8 +37,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => CurrentUser(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CurrentUser()),
+        ChangeNotifierProvider(create: (context) => CurrentGames()),
+        ChangeNotifierProvider(create: (context) => CurrentSingle()),
+      ],
       child: MaterialApp(
         title: 'GamesReviews',
         localizationsDelegates: [
