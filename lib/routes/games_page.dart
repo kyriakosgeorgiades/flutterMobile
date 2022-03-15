@@ -1,6 +1,8 @@
+import 'package:georgiadek_sem2_flutter/states/games.dart';
 import 'package:georgiadek_sem2_flutter/states/user.dart';
 import 'package:provider/provider.dart';
 
+import '../custom_widgets/dynamicCards.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +15,16 @@ class GamesWidget extends StatefulWidget {
 }
 
 class _GamesWidgetState extends State<GamesWidget> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  Future<dynamic> gamesFuture;
+  void initState() {
+    super.initState();
 
-  // getToken(BuildContext context) async {
-  //   CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
-  //   print('Token ${_currentUser.getstorageToken}');
-  //   var token = await _currentUser.getstorageToken;
-  //   print("I AM TOKEN: ${token}");
-  //   return token;
-  // }
+    gamesFuture = getGamesWidget(context);
+  }
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _isLoading = true;
+  bool isApiResponse = false;
 
   FlutterFlowIconButton getIconStatus(BuildContext context) {
     CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
@@ -60,9 +63,20 @@ class _GamesWidgetState extends State<GamesWidget> {
     }
   }
 
+  getGamesWidget(BuildContext context) async {
+    CurrentGames _currentGame =
+        Provider.of<CurrentGames>(context, listen: false);
+    await _currentGame.games();
+    return _currentGame;
+  }
+
   @override
   Widget build(BuildContext context) {
-    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
+    CurrentGames _currentGame =
+        Provider.of<CurrentGames>(context, listen: false);
+    _currentGame.getGames;
+    _currentGame.getGamesMap;
+
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -95,7 +109,7 @@ class _GamesWidgetState extends State<GamesWidget> {
             size: 30,
           ),
           onPressed: () {
-            print('IconButton pressed ...');
+            print('IconButton pressed .dsdgs..');
           },
         ),
       ),
@@ -148,86 +162,55 @@ class _GamesWidgetState extends State<GamesWidget> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
-                              child: Material(
-                                color: Colors.transparent,
-                                elevation: 10,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  elevation: 10,
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Game Name',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText2
-                                                      .override(
-                                                        fontFamily: 'Poppins',
-                                                        color: Colors.white,
-                                                        fontSize: 16,
-                                                      ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 4, 0, 0),
-                                              child: Text(
-                                                'Year',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyText2
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          color: Colors.white,
-                                                          fontSize: 16,
-                                                        ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Expanded(
-                                            child: FlutterFlowIconButton(
-                                              borderColor: Colors.transparent,
-                                              borderRadius: 30,
-                                              borderWidth: 1,
-                                              buttonSize: 60,
-                                              icon: Icon(
-                                                Icons.info_outline,
-                                                color: Colors.white,
-                                                size: 30,
-                                              ),
-                                              onPressed: () {
-                                                print('IconButton pressed ...');
+                                  child: FutureBuilder(
+                                      future: gamesFuture,
+                                      builder: (context, snapshot) {
+                                        print("snapshot");
+                                        print(snapshot.error);
+                                        switch (snapshot.connectionState) {
+                                          case ConnectionState.waiting:
+                                            return Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          case ConnectionState.done:
+                                            return ListView.builder(
+                                              itemCount:
+                                                  _currentGame.getGames.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 10),
+                                                  child: GameCard(
+                                                      gameName: _currentGame
+                                                              .getGamesMap[
+                                                          _currentGame.getGames[
+                                                              index]]['name'],
+                                                      year: _currentGame
+                                                          .getGamesMap[
+                                                              _currentGame
+                                                                  .getGames[index]]
+                                                              ['year']
+                                                          .toString(),
+                                                      cover:
+                                                          'assets/images/waves@2x.png'),
+                                                );
                                               },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                            );
+                                          default:
+                                            return Text('Done');
+                                        }
+                                      }),
                                 ),
                               ),
                             ),
