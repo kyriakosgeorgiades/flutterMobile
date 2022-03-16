@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:georgiadek_sem2_flutter/routes/addGame_page.dart';
 import 'package:georgiadek_sem2_flutter/routes/register_page.dart';
 import 'package:georgiadek_sem2_flutter/routes/singleGame_page.dart';
 
@@ -23,6 +24,8 @@ class RouteGenerator {
       case '/register':
         return MaterialPageRoute(builder: (_) => RegisterWidget());
         break;
+      case '/addGame':
+        return MaterialPageRoute(builder: (_) => AddGameWidget());
       case '/games/game':
         return MaterialPageRoute(builder: (_) => SingleGameVeiwWidget());
         break;

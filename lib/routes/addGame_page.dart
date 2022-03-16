@@ -1,7 +1,21 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
+import 'package:georgiadek_sem2_flutter/apiCalls.dart';
+import 'package:georgiadek_sem2_flutter/states/user.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:markdown_editable_textinput/format_markdown.dart';
+import 'package:markdown_editable_textinput/markdown_text_input.dart';
+import 'package:provider/provider.dart';
+
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
+import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 
 class AddGameWidget extends StatefulWidget {
   const AddGameWidget({Key key}) : super(key: key);
@@ -14,8 +28,34 @@ class _AddGameWidgetState extends State<AddGameWidget> {
   TextEditingController textController1;
   TextEditingController textController2;
   TextEditingController textController3;
+  TextEditingController controller = TextEditingController();
   double sliderValue;
+  String description;
+  String base64String;
+
+  File image;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return null;
+      String imagePath = image.path;
+      final imageTemporary = File(image.path);
+      File imageFile = File(imagePath);
+      Uint8List imageBytes = await imageFile.readAsBytes();
+      base64String = base64.encode(imageBytes);
+
+      setState(() => this.image = imageTemporary);
+    } on PlatformException catch (e) {
+      print('Failed to get the image :$e');
+    }
+  }
+
+  Future uploadData(Map<String, dynamic> data) async {
+    var response = await CallApi().postDataAuth(data, 'games');
+    print("the response is");
+    print(response);
+  }
 
   @override
   void initState() {
@@ -27,6 +67,7 @@ class _AddGameWidgetState extends State<AddGameWidget> {
 
   @override
   Widget build(BuildContext context) {
+    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -45,10 +86,10 @@ class _AddGameWidgetState extends State<AddGameWidget> {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
-                mainAxisSize: MainAxisSize.max,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width,
@@ -69,187 +110,211 @@ class _AddGameWidgetState extends State<AddGameWidget> {
                 child: Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(16, 20, 16, 0),
                   child: Row(
-                    mainAxisSize: MainAxisSize.max,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
-                              child: TextFormField(
-                                controller: textController1,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  labelText: 'Game Name',
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  filled: true,
-                                  fillColor: Color(0xFF208DDD),
-                                ),
-                                style: FlutterFlowTheme.of(context).bodyText1,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
-                              child: TextFormField(
-                                controller: textController2,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  labelText: 'Publisher',
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  filled: true,
-                                  fillColor: Color(0xFF208DDD),
-                                ),
-                                style: FlutterFlowTheme.of(context).bodyText1,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
-                              child: TextFormField(
-                                controller: textController3,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  labelText: 'Description',
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  filled: true,
-                                  fillColor: Color(0xFF208DDD),
-                                ),
-                                style: FlutterFlowTheme.of(context).bodyText1,
-                                keyboardType: TextInputType.multiline,
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(-0.95, 0),
-                              child: Text(
-                                'Year',
-                                style: FlutterFlowTheme.of(context).bodyText1,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
-                              child: Slider(
-                                activeColor:
-                                    FlutterFlowTheme.of(context).primaryColor,
-                                inactiveColor: Color(0xFF9E9E9E),
-                                min: 1980,
-                                max: 2022,
-                                value: sliderValue ??= 2022,
-                                onChanged: (newValue) {
-                                  setState(() => sliderValue = newValue);
-                                },
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(-0.95, 0),
-                              child: Text(
-                                'Cover',
-                                style: FlutterFlowTheme.of(context).bodyText1,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFA51A1A),
-                                  borderRadius: BorderRadius.circular(900),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 2, 0, 0),
-                                  child: FlutterFlowIconButton(
-                                    borderColor: Colors.transparent,
-                                    borderRadius: 181111111,
-                                    buttonSize: 60,
-                                    icon: Icon(
-                                      Icons.picture_in_picture,
-                                      color: Colors.black,
-                                      size: 30,
-                                    ),
-                                    onPressed: () {
-                                      print('IconButton pressed ...');
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                              child: FFButtonWidget(
-                                onPressed: () {
-                                  print('Button pressed ...');
-                                },
-                                text: 'Sumbit Game',
-                                options: FFButtonOptions(
-                                  width: 200,
-                                  height: 50,
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryColor,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .subtitle2
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: Colors.white,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+                                child: TextFormField(
+                                  controller: textController1,
+                                  obscureText: false,
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    labelText: 'Game Name',
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 2,
                                       ),
-                                  elevation: 2,
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    filled: true,
+                                    fillColor: Color(0xFF208DDD),
                                   ),
-                                  borderRadius: 8,
+                                  style: FlutterFlowTheme.of(context).bodyText1,
                                 ),
                               ),
-                            ),
-                          ],
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+                                child: TextFormField(
+                                  controller: textController2,
+                                  obscureText: false,
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    labelText: 'Publisher',
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    filled: true,
+                                    fillColor: Color(0xFF208DDD),
+                                  ),
+                                  style: FlutterFlowTheme.of(context).bodyText1,
+                                ),
+                              ),
+                              Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 0, 20),
+                                  child: MarkdownTextInput(
+                                      (String value) =>
+                                          setState(() => description = value),
+                                      description,
+                                      controller: controller,
+                                      maxLines: 5,
+                                      actions: MarkdownType.values,
+                                      label: 'Description')),
+                              Align(
+                                alignment: AlignmentDirectional(-0.95, 0),
+                                child: Text(
+                                  'Year',
+                                  style: FlutterFlowTheme.of(context).bodyText1,
+                                ),
+                              ),
+                              Text(
+                                sliderValue == null
+                                    ? 'Loading'
+                                    : sliderValue.toStringAsFixed(0),
+                                style: TextStyle(fontSize: 35),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+                                child: Slider(
+                                  activeColor:
+                                      FlutterFlowTheme.of(context).primaryColor,
+                                  inactiveColor: Color(0xFF9E9E9E),
+                                  min: 1980,
+                                  max: 2022,
+                                  divisions: 42,
+                                  value: sliderValue ??= 2022,
+                                  onChanged: (newValue) {
+                                    setState(() => sliderValue = newValue);
+                                  },
+                                ),
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional(-0.95, 0),
+                                child: Text(
+                                  'Cover',
+                                  style: FlutterFlowTheme.of(context).bodyText1,
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
+                                child: FlutterFlowIconButton(
+                                  borderColor: Colors.transparent,
+                                  borderRadius: 181111111,
+                                  buttonSize: 60,
+                                  icon: Icon(
+                                    Icons.picture_in_picture,
+                                    color: Colors.black,
+                                    size: 30,
+                                  ),
+                                  onPressed: () {
+                                    print('Gallery pressed ...');
+                                    pickImage(ImageSource.gallery);
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
+                                child: FlutterFlowIconButton(
+                                  borderColor: Colors.transparent,
+                                  borderRadius: 181111111,
+                                  buttonSize: 60,
+                                  icon: Icon(
+                                    Icons.camera,
+                                    color: Colors.black,
+                                    size: 30,
+                                  ),
+                                  onPressed: () {
+                                    print('Camera pic ...');
+                                    pickImage(ImageSource.camera);
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+                                child: FFButtonWidget(
+                                  onPressed: () {
+                                    List<String> missing = [];
+                                    Map<String, dynamic> newGame = {};
+                                    newGame.addAll({
+                                      'name': textController1.text,
+                                      'publisher': textController2.text,
+                                      'description': controller.text,
+                                      'year': sliderValue.round(),
+                                      'user_id': _currentUser.getUid,
+                                      'token': _currentUser.getToken,
+                                      'cover': base64String,
+                                    });
+                                    print("I am map");
+                                    print(newGame);
+                                    newGame.forEach((key, value) {
+                                      if (value == null || value == '') {
+                                        missing.add(key);
+                                      }
+                                    });
+                                    if (missing.isNotEmpty) {
+                                      var stringList = missing.join(", ");
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content:
+                                                  Text("Missing ${stringList}"),
+                                              duration: Duration(seconds: 4)));
+                                    } else {
+                                      uploadData(newGame);
+                                    }
+                                  },
+                                  text: 'Sumbit Game',
+                                  options: FFButtonOptions(
+                                    width: 200,
+                                    height: 50,
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryColor,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .subtitle2
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: Colors.white,
+                                        ),
+                                    elevation: 2,
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1,
+                                    ),
+                                    borderRadius: 8,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],

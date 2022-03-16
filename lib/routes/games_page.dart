@@ -74,6 +74,7 @@ class _GamesWidgetState extends State<GamesWidget> {
   Widget build(BuildContext context) {
     CurrentGames _currentGame =
         Provider.of<CurrentGames>(context, listen: false);
+    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
     _currentGame.getGames;
     _currentGame.getGamesMap;
 
@@ -109,7 +110,14 @@ class _GamesWidgetState extends State<GamesWidget> {
             size: 30,
           ),
           onPressed: () {
-            print('IconButton pressed .dsdgs..');
+            if (_currentUser.getToken != null) {
+              print('IconButton pressed .dsdgs..');
+              Navigator.of(context).pushNamed('/addGame');
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Login to add a Game!"),
+                  duration: Duration(seconds: 2)));
+            }
           },
         ),
       ),

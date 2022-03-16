@@ -16,6 +16,21 @@ class CallApi {
         });
   }
 
+  postDataAuth(data, endpoint) async {
+    var fullUrl = _url + endpoint;
+    String token = 'Bearer ' + data['token'];
+    print("I am login token");
+    print(token);
+    data.remove('token');
+    return await htpp
+        .post(Uri.parse(fullUrl), body: jsonEncode(data), headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'authorization': token,
+      'authcheck': 'needAuth'
+    });
+  }
+
   getData(endpoint) async {
     var fullUrl = _url + endpoint;
     print("FULL URL: ${fullUrl}");
