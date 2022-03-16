@@ -178,7 +178,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         });
                                         loginUser(textController1.text,
                                             textController2.text, context);
-
+                                        isApiResponse = false;
 
                                         print('Button pressed ...');
                                       },

@@ -38,7 +38,7 @@ class GameInfo extends StatelessWidget {
         padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
