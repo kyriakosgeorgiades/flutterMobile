@@ -4,7 +4,7 @@ import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../loading.dart';
+import '../custom_widgets/loading.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({Key key}) : super(key: key);
@@ -43,6 +43,13 @@ class _LoginWidgetState extends State<LoginWidget> {
     textController1 = TextEditingController();
     textController2 = TextEditingController();
     passwordVisibility = false;
+  }
+
+  @override
+  void dispose() {
+    textController1.dispose();
+    textController2.dispose();
+    super.dispose();
   }
 
   @override

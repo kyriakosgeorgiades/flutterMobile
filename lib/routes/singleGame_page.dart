@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:markdown_editable_textinput/format_markdown.dart';
 import 'package:markdown_editable_textinput/markdown_text_input.dart';
 import 'package:provider/provider.dart';
 
+import '../apiCalls.dart';
+import '../custom_widgets/loading.dart';
 import '../custom_widgets/reviewCards.dart';
 import '../custom_widgets/singleGameInfo.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -25,7 +29,8 @@ class _SingleGameVeiwWidgetState extends State<SingleGameVeiwWidget> {
   Future<dynamic> infoFuture;
   Future<dynamic> reviewsFuture;
   double sliderValue;
-  String description = 'Enter your review...';
+  String description = '';
+  bool isApiResponse = false;
 
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -38,13 +43,16 @@ class _SingleGameVeiwWidgetState extends State<SingleGameVeiwWidget> {
     textController = TextEditingController();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   getInfo(BuildContext context) async {
     CurrentSingle _currentInfo =
         Provider.of<CurrentSingle>(context, listen: false);
     CurrentGames _currentGame =
         Provider.of<CurrentGames>(context, listen: false);
-    print(" I HAVE THE NAME BEFORE RETURN");
-    print(_currentGame.getSingleGame);
     return await _currentInfo.singleGame(_currentGame.getSingleGame);
   }
 
@@ -58,11 +66,34 @@ class _SingleGameVeiwWidgetState extends State<SingleGameVeiwWidget> {
 
   @override
   Widget build(BuildContext context) {
+    return ProgressHUD(
+      child: reviewBuild(context),
+      inAsyncCall: isApiResponse,
+      opacity: 0.3,
+    );
+  }
+
+  void rebuildAllChildren(BuildContext context) {
+    void rebuild(Element el) {
+      el.markNeedsBuild();
+      el.visitChildren(rebuild);
+    }
+
+    (context as Element).visitChildren(rebuild);
+  }
+
+  Widget reviewBuild(BuildContext context) {
     CurrentGames _currentGame =
         Provider.of<CurrentGames>(context, listen: false);
     CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
     CurrentSingle _currentInfo =
         Provider.of<CurrentSingle>(context, listen: false);
+    List<String> gamesList = _currentGame.getGames;
+    final int indexGame = gamesList
+        .indexWhere((value) => value.contains('${_currentGame.getSingleGame}'));
+    List<String> pathsList = _currentGame.getPahts;
+    final String filePath = pathsList[indexGame];
+
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -142,33 +173,13 @@ class _SingleGameVeiwWidgetState extends State<SingleGameVeiwWidget> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 100,
                                     decoration: BoxDecoration(
                                       color: Colors.black,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Flexible(
-                                              child: Image.network(
-                                                'https://picsum.photos/seed/700/600',
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                    child: Image.file(
+                                      File(filePath),
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
@@ -256,73 +267,152 @@ class _SingleGameVeiwWidgetState extends State<SingleGameVeiwWidget> {
                                         return Text('done');
                                     }
                                   }),
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF2FD398),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                alignment: AlignmentDirectional(0, -0.0),
-                                child: SingleChildScrollView(
-                                  reverse: true,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      MarkdownTextInput(
-                                          (String value) => setState(
-                                              () => description = value),
-                                          description,
-                                          controller: controller,
-                                          maxLines: 5,
-                                          actions: MarkdownType.values,
-                                          label: 'Review'),
-                                      Text(
-                                        sliderValue.toString(),
-                                        style: TextStyle(fontSize: 35),
-                                      ),
-                                      Slider(
-                                        activeColor: Color(0xFF208DDD),
-                                        inactiveColor: Color(0xFF673F3F),
-                                        min: 1,
-                                        max: 5,
-                                        divisions: 4,
-                                        value: sliderValue ??= 1,
-                                        onChanged: (newValue) {
-                                          setState(
-                                              () => sliderValue = newValue);
-                                        },
-                                      ),
-                                      FFButtonWidget(
-                                        onPressed: () {
-                                          print('Button pressed ...');
-                                        },
-                                        text: 'Sumbit Review',
-                                        options: FFButtonOptions(
-                                          width: 180,
-                                          height: 40,
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryColor,
-                                          textStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .subtitle2
-                                                  .override(
-                                                    fontFamily: 'Poppins',
-                                                    color: Colors.white,
+                              _currentUser.getToken != null
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 15),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF2FD398),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        alignment:
+                                            AlignmentDirectional(0, -0.0),
+                                        child: SingleChildScrollView(
+                                          reverse: true,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: MarkdownTextInput(
+                                                    (String value) =>
+                                                        print('test'),
+                                                    description,
+                                                    controller: controller,
+                                                    maxLines: 5,
+                                                    actions:
+                                                        MarkdownType.values,
+                                                    label: 'Review'),
+                                              ),
+                                              Text(
+                                                sliderValue == null
+                                                    ? '1'
+                                                    : sliderValue
+                                                        .toStringAsFixed(0),
+                                                style: TextStyle(fontSize: 35),
+                                              ),
+                                              Slider(
+                                                activeColor: Color(0xFF208DDD),
+                                                inactiveColor:
+                                                    Color(0xFF673F3F),
+                                                min: 1,
+                                                max: 5,
+                                                divisions: 4,
+                                                value: sliderValue ??= 1,
+                                                onChanged: (newValue) {
+                                                  setState(() =>
+                                                      sliderValue = newValue);
+                                                },
+                                              ),
+                                              FFButtonWidget(
+                                                onPressed: () {
+                                                  print(
+                                                      'Button prefssddsfssed ...');
+                                                  List<String> missing = [];
+                                                  Map<String, dynamic>
+                                                      newReview = {};
+                                                  newReview.addAll({
+                                                    'userID':
+                                                        _currentUser.getUid,
+                                                    'rate': sliderValue.round(),
+                                                    'description':
+                                                        controller.text,
+                                                    'token':
+                                                        _currentUser.getToken,
+                                                  });
+
+                                                  newReview
+                                                      .forEach((key, value) {
+                                                    if ((value == null ||
+                                                        value == '')) {
+                                                      missing.add(key);
+                                                    }
+                                                  });
+                                                  if (missing.isNotEmpty) {
+                                                    var stringList =
+                                                        missing.join(", ");
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                            content: Text(
+                                                                "Missing ${stringList}"),
+                                                            duration: Duration(
+                                                                seconds: 4)));
+                                                  } else {
+                                                    setState(() {
+                                                      isApiResponse = true;
+                                                    });
+                                                    CallApi().postDataAuth(
+                                                        newReview,
+                                                        'games' +
+                                                            '/' +
+                                                            '${_currentGame.getSingleGame}' +
+                                                            '/' +
+                                                            'reviews');
+
+                                                    Future.delayed(
+                                                        Duration(seconds: 3),
+                                                        () async {
+                                                      setState(() {
+                                                        isApiResponse = false;
+                                                      });
+                                                      await _currentInfo
+                                                          .reviewsGame(
+                                                              _currentGame
+                                                                  .getSingleGame);
+                                                      rebuildAllChildren(
+                                                          context);
+                                                    });
+                                                  }
+                                                },
+                                                text: 'Sumbit Review',
+                                                options: FFButtonOptions(
+                                                  width: 180,
+                                                  height: 40,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primaryColor,
+                                                  textStyle: FlutterFlowTheme
+                                                          .of(context)
+                                                      .subtitle2
+                                                      .override(
+                                                        fontFamily: 'Poppins',
+                                                        color: Colors.white,
+                                                      ),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    width: 1,
                                                   ),
-                                          borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                            width: 1,
+                                                  borderRadius: 12,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          borderRadius: 12,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : Text("Login to leave a review",
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 30)),
                             ],
                           ),
                         ),

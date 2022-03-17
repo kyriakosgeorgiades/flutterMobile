@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:georgiadek_sem2_flutter/flutter_flow/flutter_flow_theme.dart';
 import 'package:georgiadek_sem2_flutter/states/games.dart';
 import 'package:provider/provider.dart';
@@ -59,9 +60,8 @@ class GameInfo extends StatelessWidget {
               "Uploaded By: " + addedBy,
               style: FlutterFlowTheme.of(context).bodyText1,
             ),
-            Text(
-              "Description: " + description,
-              style: FlutterFlowTheme.of(context).bodyText1,
+            MarkdownBody(
+              data: "Description: " + description,
             ),
           ],
         ),
