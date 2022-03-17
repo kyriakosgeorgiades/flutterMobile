@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:georgiadek_sem2_flutter/flutter_flow/flutter_flow_theme.dart';
 import 'package:georgiadek_sem2_flutter/states/games.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class ReviewCards extends StatelessWidget {
   final String reviewer;
@@ -62,9 +63,8 @@ class ReviewCards extends StatelessWidget {
                 "Date: " + date,
                 style: FlutterFlowTheme.of(context).bodyText1,
               ),
-              Text(
-                "Review: " + description,
-                style: FlutterFlowTheme.of(context).bodyText1,
+              MarkdownBody(
+                data: "Review: " + description,
               ),
             ],
           ),

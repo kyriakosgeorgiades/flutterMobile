@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:georgiadek_sem2_flutter/states/games.dart';
 import 'package:georgiadek_sem2_flutter/states/user.dart';
 import 'package:provider/provider.dart';
+import 'package:async/async.dart';
 
 import '../custom_widgets/dynamicCards.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
@@ -16,15 +19,18 @@ class GamesWidget extends StatefulWidget {
 
 class _GamesWidgetState extends State<GamesWidget> {
   Future<dynamic> gamesFuture;
-  void initState() {
-    super.initState();
-
-    gamesFuture = getGamesWidget(context);
-  }
+  bool flag = true;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isLoading = true;
   bool isApiResponse = false;
+  AsyncMemoizer _memoizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _memoizer = AsyncMemoizer();
+  }
 
   FlutterFlowIconButton getIconStatus(BuildContext context) {
     CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
@@ -66,17 +72,25 @@ class _GamesWidgetState extends State<GamesWidget> {
   getGamesWidget(BuildContext context) async {
     CurrentGames _currentGame =
         Provider.of<CurrentGames>(context, listen: false);
+
     await _currentGame.games();
     return _currentGame;
+  }
+
+  _fetchData() async {
+    return this._memoizer.runOnce(() async {
+      gamesFuture = getGamesWidget(context);
+      await Future.delayed(Duration(seconds: 1));
+      return gamesFuture;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     CurrentGames _currentGame =
         Provider.of<CurrentGames>(context, listen: false);
+
     CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
-    _currentGame.getGames;
-    _currentGame.getGamesMap;
 
     return Scaffold(
       key: scaffoldKey,
@@ -181,7 +195,8 @@ class _GamesWidgetState extends State<GamesWidget> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: FutureBuilder(
-                                      future: gamesFuture,
+                                      future:
+                                          _fetchData(), //_currentGame.games(),
                                       builder: (context, snapshot) {
                                         print("snapshot");
                                         print(snapshot.error);
@@ -191,32 +206,40 @@ class _GamesWidgetState extends State<GamesWidget> {
                                                 child:
                                                     CircularProgressIndicator());
                                           case ConnectionState.done:
-                                            return ListView.builder(
-                                              itemCount:
-                                                  _currentGame.getGames.length,
-                                              itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 10),
-                                                  child: GameCard(
-                                                      gameName: _currentGame
-                                                              .getGamesMap[
-                                                          _currentGame.getGames[
-                                                              index]]['name'],
-                                                      year: _currentGame
-                                                          .getGamesMap[
-                                                              _currentGame
-                                                                  .getGames[index]]
-                                                              ['year']
-                                                          .toString(),
-                                                      cover:
-                                                          'assets/images/waves@2x.png'),
-                                                );
-                                              },
-                                            );
+                                            if (snapshot.hasData &&
+                                                !snapshot.hasError) {
+                                              return ListView.builder(
+                                                itemCount: _currentGame
+                                                    .getGames.length,
+                                                itemBuilder: (context, index) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 10),
+                                                    child: GameCard(
+                                                        gameName: _currentGame
+                                                                .getGamesMap[_currentGame.getGames[index]]
+                                                            ['name'],
+                                                        year: _currentGame
+                                                            .getGamesMap[_currentGame.getGames[index]]
+                                                                ['year']
+                                                            .toString(),
+                                                        cover: _currentGame.getGamesMap[
+                                                                _currentGame
+                                                                    .getGames[index]]
+                                                            ['cover'],
+                                                        filePath: _currentGame
+                                                            .getPahts[index]),
+                                                  );
+                                                },
+                                              );
+                                            } else {
+                                              return Text('Done');
+                                            }
+                                            break;
                                           default:
-                                            return Text('Done');
+                                            return Text('ok');
+                                            break;
                                         }
                                       }),
                                 ),

@@ -18,6 +18,7 @@ class CallApi {
 
   postDataAuth(data, endpoint) async {
     var fullUrl = _url + endpoint;
+    print("URL: ${fullUrl}");
     String token = 'Bearer ' + data['token'];
     print("I am login token");
     print(token);
