@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:georgiadek_sem2_flutter/states/games.dart';
 import 'package:georgiadek_sem2_flutter/states/user.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +49,8 @@ class _GamesWidgetState extends State<GamesWidget> {
           size: 30,
         ),
         onPressed: () async {
+          _currentUser.removeToken();
+          setState(() {});
           print('IconButton pressed test');
         },
       );
@@ -64,6 +67,7 @@ class _GamesWidgetState extends State<GamesWidget> {
         ),
         onPressed: () async {
           print('IconButton pressed test');
+          Navigator.of(context).pushNamed('/login');
         },
       );
     }
@@ -135,6 +139,7 @@ class _GamesWidgetState extends State<GamesWidget> {
           },
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
@@ -164,12 +169,18 @@ class _GamesWidgetState extends State<GamesWidget> {
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(
-                      'Reviewed Games',
-                      style: FlutterFlowTheme.of(context).bodyText2.override(
-                            fontFamily: 'Poppins',
-                            color: FlutterFlowTheme.of(context).primaryText,
-                          ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xFF42BEA5),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Text(
+                        'Reviewed Games',
+                        style: FlutterFlowTheme.of(context).bodyText2.override(
+                              fontFamily: 'Poppins',
+                              color: FlutterFlowTheme.of(context).primaryText,
+                            ),
+                      ),
                     ),
                   ],
                 ),

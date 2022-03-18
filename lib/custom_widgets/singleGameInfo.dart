@@ -37,33 +37,78 @@ class GameInfo extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
-              child: Text(
-                "Publisher: " + publisher,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Publisher: ",
+                      style: FlutterFlowTheme.of(context).bodyText1,
+                    ),
+                    Text(
+                      publisher,
+                      style: FlutterFlowTheme.of(context).subtitle2,
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Year: ",
+                    style: FlutterFlowTheme.of(context).bodyText1,
+                  ),
+                  Text(
+                    year,
+                    style: FlutterFlowTheme.of(context).subtitle2,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Uploaded: ",
+                    style: FlutterFlowTheme.of(context).bodyText1,
+                  ),
+                  Text(
+                    date,
+                    style: FlutterFlowTheme.of(context).subtitle2,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Uploaded By : ",
+                    style: FlutterFlowTheme.of(context).bodyText1,
+                  ),
+                  Text(
+                    addedBy,
+                    style: FlutterFlowTheme.of(context).subtitle2,
+                  ),
+                ],
+              ),
+              Text(
+                'Description',
                 style: FlutterFlowTheme.of(context).bodyText1,
               ),
-            ),
-            Text(
-              "Year: " + year,
-              style: FlutterFlowTheme.of(context).bodyText1,
-            ),
-            Text(
-              "Date: " + date,
-              style: FlutterFlowTheme.of(context).bodyText1,
-            ),
-            Text(
-              "Uploaded By: " + addedBy,
-              style: FlutterFlowTheme.of(context).bodyText1,
-            ),
-            MarkdownBody(
-              data: "Description: " + description,
-            ),
-          ],
+              Container(
+                color: Colors.grey,
+                child: MarkdownBody(
+                  data: description,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

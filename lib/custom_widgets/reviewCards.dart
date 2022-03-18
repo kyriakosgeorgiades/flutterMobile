@@ -8,7 +8,7 @@ class ReviewCards extends StatelessWidget {
   final String reviewer;
   final String date;
   final String description;
-  final double rating;
+  final int rating;
 
   ReviewCards({
     this.reviewer,
@@ -30,7 +30,7 @@ class ReviewCards extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
@@ -41,17 +41,24 @@ class ReviewCards extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 50, 0),
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                     child: Text(
-                      "Reveiwed By: " + reviewer,
+                      "Reveiwed By: ",
                       style: FlutterFlowTheme.of(context).bodyText1,
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 100),
+                    child: Text(reviewer,
+                        style: FlutterFlowTheme.of(context).subtitle2),
+                  ),
                   Text(
-                    "Rating: " + rating.toString(),
+                    "Rating: ",
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyText1,
                   ),
+                  Text(rating.toString(),
+                      style: FlutterFlowTheme.of(context).subtitle2),
                   Icon(
                     Icons.star,
                     color: Colors.black,
@@ -63,9 +70,18 @@ class ReviewCards extends StatelessWidget {
                 "Date: " + date,
                 style: FlutterFlowTheme.of(context).bodyText1,
               ),
-              MarkdownBody(
-                data: "Review: " + description,
-              ),
+              Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      MarkdownBody(data: description),
+                    ],
+                  )),
             ],
           ),
         ),
