@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:georgiadek_sem2_flutter/imageAPI.dart';
 
 import '../apiCalls.dart';
 
@@ -14,7 +14,7 @@ class CurrentGames extends ChangeNotifier {
   Map<String, dynamic> _gamesMap;
   String _singleGame;
   String _fileGame;
-  List<String> _pathFiles;
+  List<Uint8List> _bytesFiles;
 
   void setSingleGame(String name) {
     _singleGame = name;
@@ -28,13 +28,13 @@ class CurrentGames extends ChangeNotifier {
   String get getCover => _cover;
   int get getYear => _year;
   List<String> get getGames => _games;
-  List<String> get getPahts => _pathFiles;
+  List<Uint8List> get getBytes => _bytesFiles;
   Map<String, dynamic> get getGamesMap => _gamesMap;
 
   Future<dynamic> games() async {
     bool flag = false;
     _games = [];
-    _pathFiles = [];
+    _bytesFiles = [];
     try {
       var response = await CallApi().getData('games');
       final Map<String, dynamic> body = jsonDecode(response.body);
@@ -42,14 +42,10 @@ class CurrentGames extends ChangeNotifier {
         flag = true;
         for (var key in body.keys) {
           _games.add(key);
-          String path = await ImagesAPI()
-              .getPicPath(body[key]['cover'], body[key]['file_name']);
-          _pathFiles.add(path);
+          final Uint8List bytesFile = base64Decode(body[key]['cover']);
+          _bytesFiles.add(bytesFile);
         }
-        print("I AM THE GAMES");
-
         _gamesMap = body;
-        print(_gamesMap);
 
         notifyListeners();
         return flag;

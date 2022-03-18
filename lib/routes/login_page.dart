@@ -82,7 +82,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   decoration: BoxDecoration(
                     color: Color(0xFF208DDD),
                     image: DecorationImage(
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                       image: Image.asset(
                         'assets/images/Kyriakos.png',
                       ).image,

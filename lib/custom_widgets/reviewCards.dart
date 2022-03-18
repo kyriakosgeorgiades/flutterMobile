@@ -50,7 +50,8 @@ class ReviewCards extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 100),
                     child: Text(reviewer,
-                        style: FlutterFlowTheme.of(context).subtitle2),
+                        style: FlutterFlowTheme.of(context).subtitle2.override(
+                            fontFamily: 'Poppins', color: Colors.black)),
                   ),
                   Text(
                     "Rating: ",
@@ -58,7 +59,8 @@ class ReviewCards extends StatelessWidget {
                     style: FlutterFlowTheme.of(context).bodyText1,
                   ),
                   Text(rating.toString(),
-                      style: FlutterFlowTheme.of(context).subtitle2),
+                      style: FlutterFlowTheme.of(context).subtitle2.override(
+                          fontFamily: 'Poppins', color: Colors.black)),
                   Icon(
                     Icons.star,
                     color: Colors.black,
@@ -68,18 +70,35 @@ class ReviewCards extends StatelessWidget {
               ),
               Text(
                 "Date: " + date,
-                style: FlutterFlowTheme.of(context).bodyText1,
+                style: FlutterFlowTheme.of(context)
+                    .subtitle2
+                    .override(fontFamily: 'Poppins', color: Colors.black),
               ),
               Container(
                   decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: Color.fromARGB(255, 5, 26, 16),
                       borderRadius: BorderRadius.circular(5)),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      MarkdownBody(data: description),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: MarkdownBody(
+                          data: description,
+                          styleSheet: MarkdownStyleSheet(
+                            a: const TextStyle(color: Colors.white),
+                            p: const TextStyle(color: Colors.white),
+                            h1: const TextStyle(color: Colors.white),
+                            h2: const TextStyle(color: Colors.white),
+                            h3: const TextStyle(color: Colors.white),
+                            h4: const TextStyle(color: Colors.white),
+                            h5: const TextStyle(color: Colors.white),
+                            h6: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
                     ],
                   )),
             ],

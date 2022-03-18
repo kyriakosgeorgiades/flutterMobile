@@ -24,8 +24,6 @@ class GameInfo extends StatelessWidget {
     CurrentGames _currentGame =
         Provider.of<CurrentGames>(context, listen: false);
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 145,
       decoration: BoxDecoration(
         color: Color(0xFF2FD398),
         boxShadow: [
@@ -39,7 +37,7 @@ class GameInfo extends StatelessWidget {
         padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
         child: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.max,
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
@@ -53,7 +51,9 @@ class GameInfo extends StatelessWidget {
                     ),
                     Text(
                       publisher,
-                      style: FlutterFlowTheme.of(context).subtitle2,
+                      style: FlutterFlowTheme.of(context)
+                          .subtitle2
+                          .override(fontFamily: 'Poppins', color: Colors.black),
                     ),
                   ],
                 ),
@@ -67,7 +67,9 @@ class GameInfo extends StatelessWidget {
                   ),
                   Text(
                     year,
-                    style: FlutterFlowTheme.of(context).subtitle2,
+                    style: FlutterFlowTheme.of(context)
+                        .subtitle2
+                        .override(fontFamily: 'Poppins', color: Colors.black),
                   ),
                 ],
               ),
@@ -80,7 +82,9 @@ class GameInfo extends StatelessWidget {
                   ),
                   Text(
                     date,
-                    style: FlutterFlowTheme.of(context).subtitle2,
+                    style: FlutterFlowTheme.of(context)
+                        .subtitle2
+                        .override(fontFamily: 'Poppins', color: Colors.black),
                   ),
                 ],
               ),
@@ -93,18 +97,41 @@ class GameInfo extends StatelessWidget {
                   ),
                   Text(
                     addedBy,
-                    style: FlutterFlowTheme.of(context).subtitle2,
+                    style: FlutterFlowTheme.of(context)
+                        .subtitle2
+                        .override(fontFamily: 'Poppins', color: Colors.black),
                   ),
                 ],
               ),
-              Text(
-                'Description',
-                style: FlutterFlowTheme.of(context).bodyText1,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Description',
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20)),
               ),
               Container(
-                color: Colors.grey,
-                child: MarkdownBody(
-                  data: description,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Color.fromARGB(255, 5, 26, 16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MarkdownBody(
+                    data: description,
+                    styleSheet: MarkdownStyleSheet(
+                      a: const TextStyle(color: Colors.white),
+                      p: const TextStyle(color: Colors.white),
+                      h1: const TextStyle(color: Colors.white),
+                      h2: const TextStyle(color: Colors.white),
+                      h3: const TextStyle(color: Colors.white),
+                      h4: const TextStyle(color: Colors.white),
+                      h5: const TextStyle(color: Colors.white),
+                      h6: const TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
               ),
             ],
