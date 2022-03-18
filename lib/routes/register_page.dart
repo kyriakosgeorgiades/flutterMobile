@@ -79,7 +79,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   decoration: BoxDecoration(
                     color: Color(0xFF208DDD),
                     image: DecorationImage(
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                       image: Image.asset(
                         'assets/images/Kyriakos.png',
                       ).image,
@@ -216,7 +216,16 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                                     EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
                                 child: FFButtonWidget(
                                   onPressed: () {
-                                    if (textController2.text !=
+                                    print("TEXT");
+                                    print(textController1.text);
+                                    if (textController1.text == '' ||
+                                        textController2.text == '' ||
+                                        textController3.text == '') {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text("Fill all inputs"),
+                                              duration: Duration(seconds: 2)));
+                                    } else if (textController2.text !=
                                         textController3.text) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(

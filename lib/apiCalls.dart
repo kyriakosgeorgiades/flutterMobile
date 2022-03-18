@@ -8,12 +8,11 @@ class CallApi {
     var fullUrl = _url + endpoint;
     print("my full URL is");
     print(fullUrl);
-    return await htpp.post(Uri.parse(fullUrl),
-        body: jsonEncode(data),
-        headers: {
-          'Content-type': 'application/json',
-          'Accept': 'application/json'
-        });
+    return await htpp
+        .post(Uri.parse(fullUrl), body: jsonEncode(data), headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+    });
   }
 
   postDataAuth(data, endpoint) async {

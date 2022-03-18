@@ -143,127 +143,92 @@ class _GamesWidgetState extends State<GamesWidget> {
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).secondaryText,
-                      image: DecorationImage(
-                        fit: BoxFit.fitWidth,
-                        image: Image.asset(
-                          'assets/images/waves@2x.png',
-                        ).image,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16, 20, 16, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFF42BEA5),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Text(
-                        'Reviewed Games',
-                        style: FlutterFlowTheme.of(context).bodyText2.override(
-                              fontFamily: 'Poppins',
-                              color: FlutterFlowTheme.of(context).primaryText,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Padding(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(16, 20, 16, 0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  elevation: 10,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: FutureBuilder(
-                                      future:
-                                          _fetchData(), //_currentGame.games(),
-                                      builder: (context, snapshot) {
-                                        print("snapshot");
-                                        print(snapshot.error);
-                                        switch (snapshot.connectionState) {
-                                          case ConnectionState.waiting:
-                                            return Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                          case ConnectionState.done:
-                                            if (snapshot.hasData &&
-                                                !snapshot.hasError) {
-                                              return ListView.builder(
-                                                itemCount: _currentGame
-                                                    .getGames.length,
-                                                itemBuilder: (context, index) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            bottom: 10),
-                                                    child: GameCard(
-                                                        gameName: _currentGame
-                                                                .getGamesMap[_currentGame.getGames[index]]
-                                                            ['name'],
-                                                        year: _currentGame
-                                                            .getGamesMap[_currentGame.getGames[index]]
-                                                                ['year']
-                                                            .toString(),
-                                                        cover: _currentGame.getGamesMap[
-                                                                _currentGame
-                                                                    .getGames[index]]
-                                                            ['cover'],
-                                                        filePath: _currentGame
-                                                            .getPahts[index]),
-                                                  );
-                                                },
-                                              );
-                                            } else {
-                                              return Text('Done');
-                                            }
-                                            break;
-                                          default:
-                                            return Text('ok');
-                                            break;
-                                        }
-                                      }),
-                                ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFF42BEA5),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Text(
+                          'Reviewed Games',
+                          style: FlutterFlowTheme.of(context)
+                              .bodyText2
+                              .override(
+                                fontFamily: 'Poppins',
+                                color: FlutterFlowTheme.of(context).primaryText,
                               ),
-                            ),
-                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16, 20, 16, 8),
+                  child: Container(
+                    child: Material(
+                      color: Colors.transparent,
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: FutureBuilder(
+                          future: _fetchData(), //_currentGame.games(),
+                          builder: (context, snapshot) {
+                            print("snapshot");
+                            print(snapshot.error);
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.waiting:
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              case ConnectionState.done:
+                                if (snapshot.hasData && !snapshot.hasError) {
+                                  return ListView.builder(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: _currentGame.getGames.length,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10),
+                                        child: GameCard(
+                                            gameName: _currentGame.getGamesMap[
+                                                    _currentGame.getGames[index]]
+                                                ['name'],
+                                            year: _currentGame
+                                                .getGamesMap[_currentGame.getGames[index]]
+                                                    ['year']
+                                                .toString(),
+                                            cover: _currentGame.getGamesMap[
+                                                    _currentGame.getGames[index]]
+                                                ['cover'],
+                                            filePath:
+                                                _currentGame.getBytes[index]),
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  return Text('Done');
+                                }
+                                break;
+                              default:
+                                return Text('ok');
+                                break;
+                            }
+                          }),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -94,7 +94,7 @@ class _AddGameWidgetState extends State<AddGameWidget> {
       key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Color(0xFF42BEA5),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: Text(
           'Add a Game',
           style: FlutterFlowTheme.of(context).title1,
@@ -215,7 +215,7 @@ class _AddGameWidgetState extends State<AddGameWidget> {
                             ),
                             Text(
                               sliderValue == null
-                                  ? 'Loading'
+                                  ? '2021'
                                   : sliderValue.toStringAsFixed(0),
                               style: TextStyle(fontSize: 35),
                             ),
