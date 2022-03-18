@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:georgiadek_sem2_flutter/states/user.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
@@ -26,7 +27,9 @@ class _LoginWidgetState extends State<LoginWidget> {
 
     try {
       if (await _currentUser.loginUser(username, password)) {
-        Navigator.of(context).pushNamed('/games');
+        // Navigator.of(context).pushNamed('/games');
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/games', (Route<dynamic> route) => false);
       } else {
         return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text("Wrong credentials"),
@@ -45,12 +48,12 @@ class _LoginWidgetState extends State<LoginWidget> {
     passwordVisibility = false;
   }
 
-  @override
-  void dispose() {
-    textController1.dispose();
-    textController2.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   textController1.dispose();
+  //   textController2.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

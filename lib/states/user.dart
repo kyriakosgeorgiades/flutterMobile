@@ -20,6 +20,11 @@ class CurrentUser extends ChangeNotifier {
 
   String get getToken => _token;
 
+  removeToken() async {
+    _token = null;
+    await _storage.deleteAll();
+  }
+
   Future<bool> signUpUser(String username, String password) async {
     bool check = false;
     try {
@@ -47,6 +52,26 @@ class CurrentUser extends ChangeNotifier {
       var response = await CallApi().postData(data, 'users/user');
       final Map<String, dynamic> body = jsonDecode(response.body);
       if (response.statusCode == 200) {
+        this._uid = body['id'];
+        this._username = body['username'];
+        await _storage.write(key: 'token', value: body['token']);
+        _token = await _storage.read(key: 'token');
+        notifyListeners();
+        return check = true;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return check;
+  }
+
+  Future<bool> registerUser(String username, String password) async {
+    bool check = false;
+    try {
+      var data = {'username': username, 'password': password};
+      var response = await CallApi().postData(data, 'users');
+      final Map<String, dynamic> body = jsonDecode(response.body);
+      if (response.statusCode == 201) {
         this._uid = body['id'];
         this._username = body['username'];
         await _storage.write(key: 'token', value: body['token']);

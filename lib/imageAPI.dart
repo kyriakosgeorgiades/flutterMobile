@@ -12,6 +12,7 @@ class ImagesAPI {
     } else if (Platform.isIOS) {
       return (await getApplicationSupportDirectory()).path;
     } else if (Platform.isWindows) {
+      print("I am windows");
       return (await provider.getTemporaryPath());
     }
   }

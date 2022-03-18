@@ -63,14 +63,14 @@ class _AddGameWidgetState extends State<AddGameWidget> {
     controller = TextEditingController();
   }
 
-  @override
-  void dispose() {
-    name.dispose();
-    publisher.dispose();
-    description_.dispose();
-    controller.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   name.dispose();
+  //   publisher.dispose();
+  //   description_.dispose();
+  //   controller.dispose();
+  //   super.dispose();
+  // }
 
   addGame(BuildContext context, Map<String, dynamic> data) async {
     CurrentGames _currentGame =
@@ -245,37 +245,48 @@ class _AddGameWidgetState extends State<AddGameWidget> {
                             Padding(
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
-                              child: FlutterFlowIconButton(
-                                borderColor: Colors.transparent,
-                                borderRadius: 181111111,
-                                buttonSize: 60,
-                                icon: Icon(
-                                  Icons.picture_in_picture,
-                                  color: Colors.black,
-                                  size: 30,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 62, 189, 161),
+                                    borderRadius: BorderRadius.circular(50.0)),
+                                child: FlutterFlowIconButton(
+                                  borderColor: Colors.transparent,
+                                  borderRadius: 181111111,
+                                  buttonSize: 60,
+                                  icon: Icon(
+                                    Icons.picture_in_picture,
+                                    color: Colors.black,
+                                    size: 30,
+                                  ),
+                                  onPressed: () {
+                                    print('Gallery pressed ...');
+                                    pickImage(ImageSource.gallery);
+                                  },
                                 ),
-                                onPressed: () {
-                                  print('Gallery pressed ...');
-                                  pickImage(ImageSource.gallery);
-                                },
                               ),
                             ),
                             Padding(
                               padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
-                              child: FlutterFlowIconButton(
-                                borderColor: Colors.transparent,
-                                borderRadius: 181111111,
-                                buttonSize: 60,
-                                icon: Icon(
-                                  Icons.camera,
-                                  color: Colors.black,
-                                  size: 30,
+                                  EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 21, 117, 117),
+                                  borderRadius: BorderRadius.circular(50.0),
                                 ),
-                                onPressed: () {
-                                  print('Camera pic ...');
-                                  pickImage(ImageSource.camera);
-                                },
+                                child: FlutterFlowIconButton(
+                                  borderColor: Colors.transparent,
+                                  borderRadius: 181111111,
+                                  buttonSize: 60,
+                                  icon: Icon(
+                                    Icons.camera,
+                                    color: Colors.black,
+                                    size: 30,
+                                  ),
+                                  onPressed: () {
+                                    print('Camera pic ...');
+                                    pickImage(ImageSource.camera);
+                                  },
+                                ),
                               ),
                             ),
                             Padding(

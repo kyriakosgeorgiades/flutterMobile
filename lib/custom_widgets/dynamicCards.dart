@@ -27,7 +27,7 @@ class GameCard extends StatelessWidget {
           color: Color.fromARGB(255, 201, 82, 82),
           borderRadius: BorderRadius.circular(10),
           image: DecorationImage(
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
               image: Image.file(
                 File(filePath),
               ).image)),
@@ -46,14 +46,14 @@ class GameCard extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: Colors.grey.withOpacity(0.9),
                       borderRadius: BorderRadius.all((Radius.circular(20))),
                     ),
                     child: Text(
                       gameName,
                       style: FlutterFlowTheme.of(context).bodyText2.override(
                           fontFamily: 'Poppins',
-                          color: Color.fromARGB(255, 0, 0, 0),
+                          color: Colors.black,
                           fontSize: 22,
                           fontWeight: FontWeight.bold),
                     ),
@@ -63,7 +63,7 @@ class GameCard extends StatelessWidget {
                   padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: Colors.grey.withOpacity(0.9),
                       borderRadius: BorderRadius.all((Radius.circular(20))),
                     ),
                     child: Text(

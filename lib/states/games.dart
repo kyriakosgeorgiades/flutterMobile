@@ -35,7 +35,6 @@ class CurrentGames extends ChangeNotifier {
     bool flag = false;
     _games = [];
     _pathFiles = [];
-    _gamesMap = {};
     try {
       var response = await CallApi().getData('games');
       final Map<String, dynamic> body = jsonDecode(response.body);
@@ -47,7 +46,10 @@ class CurrentGames extends ChangeNotifier {
               .getPicPath(body[key]['cover'], body[key]['file_name']);
           _pathFiles.add(path);
         }
+        print("I AM THE GAMES");
+
         _gamesMap = body;
+        print(_gamesMap);
 
         notifyListeners();
         return flag;

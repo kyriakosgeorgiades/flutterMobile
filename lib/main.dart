@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => CurrentSingle()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'GamesReviews',
         localizationsDelegates: [
           FFLocalizationsDelegate(),
