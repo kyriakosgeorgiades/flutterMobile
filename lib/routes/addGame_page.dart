@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:georgiadek_sem2_flutter/states/games.dart';
 import 'package:georgiadek_sem2_flutter/states/user.dart';
@@ -37,18 +38,23 @@ class _AddGameWidgetState extends State<AddGameWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   Future pickImage(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: source);
-      if (image == null) return null;
-      String imagePath = image.path;
-      fileName = imagePath.split('/').last;
-      print("I AM THE FILE NAME LOL: $fileName");
+      if (kIsWeb) {
+        FilePickerResult result = await FilePicker.platform.pickFiles();
+        Uint8List bytesFile = result.files.single.bytes;
+        fileName = result.files.single.name;
+        base64String = base64.encode(bytesFile);
+      } else {
+        final image = await ImagePicker().pickImage(source: source);
+        if (image == null) return null;
+        String imagePath = image.path;
+        fileName = imagePath.split('/').last;
+        final imageTemporary = File(image.path);
+        File imageFile = File(imagePath);
+        Uint8List imageBytes = await imageFile.readAsBytes();
+        base64String = base64.encode(imageBytes);
 
-      final imageTemporary = File(image.path);
-      File imageFile = File(imagePath);
-      Uint8List imageBytes = await imageFile.readAsBytes();
-      base64String = base64.encode(imageBytes);
-
-      setState(() => this.image = imageTemporary);
+        setState(() => this.image = imageTemporary);
+      }
     } on PlatformException catch (e) {
       print('Failed to get the image :$e');
     }
@@ -63,19 +69,24 @@ class _AddGameWidgetState extends State<AddGameWidget> {
     controller = TextEditingController();
   }
 
-  // @override
-  // void dispose() {
-  //   name.dispose();
-  //   publisher.dispose();
-  //   description_.dispose();
-  //   controller.dispose();
-  //   super.dispose();
-  // }
-
   addGame(BuildContext context, Map<String, dynamic> data) async {
     CurrentGames _currentGame =
         Provider.of<CurrentGames>(context, listen: false);
-    await _currentGame.addgame(data);
+    if (await _currentGame.addgame(data)) {
+      Future.delayed(Duration(seconds: 1), () {
+        setState(() {
+          isApiResponse = false;
+        });
+        Navigator.pushNamed(context, '/games');
+      });
+    } else {
+      setState(() {
+        isApiResponse = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Game already existis"),
+          duration: Duration(seconds: 2)));
+    }
   }
 
   @override
@@ -259,7 +270,6 @@ class _AddGameWidgetState extends State<AddGameWidget> {
                                     size: 30,
                                   ),
                                   onPressed: () {
-                                    print('Gallery pressed ...');
                                     pickImage(ImageSource.gallery);
                                   },
                                 ),
@@ -283,7 +293,6 @@ class _AddGameWidgetState extends State<AddGameWidget> {
                                     size: 30,
                                   ),
                                   onPressed: () {
-                                    print('Camera pic ...');
                                     pickImage(ImageSource.camera);
                                   },
                                 ),
@@ -326,13 +335,6 @@ class _AddGameWidgetState extends State<AddGameWidget> {
                                       isApiResponse = true;
                                     });
                                     addGame(context, newGame);
-
-                                    Future.delayed(Duration(seconds: 1), () {
-                                      setState(() {
-                                        isApiResponse = false;
-                                      });
-                                      Navigator.pushNamed(context, '/games');
-                                    });
                                   }
                                 },
                                 text: 'Sumbit Game',

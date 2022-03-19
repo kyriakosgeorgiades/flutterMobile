@@ -56,15 +56,17 @@ class CurrentGames extends ChangeNotifier {
     return flag;
   }
 
-  Future<dynamic> addgame(Map<String, dynamic> data) async {
+  Future<bool> addgame(Map<String, dynamic> data) async {
+    bool flag = false;
     try {
       var response = await CallApi().postDataAuth(data, 'games');
       final Map<String, dynamic> body = jsonDecode(response.body);
       if (response.statusCode == 201) {
+        flag = true;
         notifyListeners();
-        return 'Game Added';
+        return flag;
       } else {
-        return 'Game is not added';
+        return flag;
       }
     } catch (e) {
       print(e);

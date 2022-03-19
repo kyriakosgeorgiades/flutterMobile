@@ -130,7 +130,7 @@ class _SingleGameVeiwWidgetState extends State<SingleGameVeiwWidget> {
                               image: Image.asset(
                                 'assets/images/waves@2x.png',
                               ).image,
-                              fit: BoxFit.none,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),

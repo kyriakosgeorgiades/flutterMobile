@@ -22,8 +22,8 @@ class GameCard extends StatelessWidget {
     CurrentGames _currentGame =
         Provider.of<CurrentGames>(context, listen: false);
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width * 0.4,
+      height: MediaQuery.of(context).size.height * 0.3,
       decoration: BoxDecoration(
           color: Color.fromARGB(255, 201, 82, 82),
           borderRadius: BorderRadius.circular(10),
@@ -33,6 +33,8 @@ class GameCard extends StatelessWidget {
                 filePath,
               ).image)),
       child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: Column(
@@ -45,13 +47,16 @@ class GameCard extends StatelessWidget {
                           Color.fromARGB(255, 255, 255, 255).withOpacity(0.3),
                       borderRadius: BorderRadius.all((Radius.circular(20))),
                     ),
-                    child: Text(
-                      gameName,
-                      style: FlutterFlowTheme.of(context).bodyText2.override(
-                          fontFamily: 'Poppins',
-                          color: Colors.black,
-                          fontSize: 38,
-                          fontWeight: FontWeight.bold),
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        gameName,
+                        style: FlutterFlowTheme.of(context).bodyText2.override(
+                            fontFamily: 'Poppins',
+                            color: Colors.black,
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ),
@@ -63,13 +68,16 @@ class GameCard extends StatelessWidget {
                           Color.fromARGB(255, 255, 247, 247).withOpacity(0.3),
                       borderRadius: BorderRadius.all((Radius.circular(20))),
                     ),
-                    child: Text(
-                      year,
-                      style: FlutterFlowTheme.of(context).bodyText2.override(
-                            fontFamily: 'Poppins',
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        year,
+                        style: FlutterFlowTheme.of(context).bodyText2.override(
+                              fontFamily: 'Poppins',
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
+                      ),
                     ),
                   ),
                 ),
@@ -77,7 +85,6 @@ class GameCard extends StatelessWidget {
             ),
           ),
           Column(
-            mainAxisSize: MainAxisSize.max,
             children: [
               FlutterFlowIconButton(
                 borderColor: Colors.transparent,

@@ -115,7 +115,7 @@ class _GamesWidgetState extends State<GamesWidget> {
           print('FloatingActionButton pressed ...');
         },
         backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        elevation: 8,
+        elevation: 20,
         child: FlutterFlowIconButton(
           borderColor: Colors.transparent,
           borderRadius: 30,
@@ -139,95 +139,106 @@ class _GamesWidgetState extends State<GamesWidget> {
           },
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+      //floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16, 20, 16, 0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFF42BEA5),
-                          borderRadius: BorderRadius.circular(8.0),
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(16, 20, 16, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF42BEA5),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: FittedBox(
+                            fit: BoxFit.fill,
+                            child: Text(
+                              'Reviewed Games',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyText2
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                            ),
+                          ),
                         ),
-                        child: Text(
-                          'Reviewed Games',
-                          style: FlutterFlowTheme.of(context)
-                              .bodyText2
-                              .override(
-                                fontFamily: 'Poppins',
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16, 20, 16, 8),
-                  child: Container(
-                    child: Material(
-                      color: Colors.transparent,
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: FutureBuilder(
-                          future: _fetchData(), //_currentGame.games(),
-                          builder: (context, snapshot) {
-                            print("snapshot");
-                            print(snapshot.error);
-                            switch (snapshot.connectionState) {
-                              case ConnectionState.waiting:
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              case ConnectionState.done:
-                                if (snapshot.hasData && !snapshot.hasError) {
-                                  return ListView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: _currentGame.getGames.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 10),
-                                        child: GameCard(
-                                            gameName: _currentGame.getGamesMap[
-                                                    _currentGame.getGames[index]]
-                                                ['name'],
-                                            year: _currentGame
-                                                .getGamesMap[_currentGame.getGames[index]]
-                                                    ['year']
-                                                .toString(),
-                                            cover: _currentGame.getGamesMap[
-                                                    _currentGame.getGames[index]]
-                                                ['cover'],
-                                            filePath:
-                                                _currentGame.getBytes[index]),
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  return Text('Done');
-                                }
-                                break;
-                              default:
-                                return Text('ok');
-                                break;
-                            }
-                          }),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(16, 20, 16, 8),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: MediaQuery.of(context).size.height,
+                      child: Material(
+                        color: Colors.transparent,
+                        elevation: 10,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: FutureBuilder(
+                            future: _fetchData(), //_currentGame.games(),
+                            builder: (context, snapshot) {
+                              print("snapshot");
+                              print(snapshot.error);
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.waiting:
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                case ConnectionState.done:
+                                  if (snapshot.hasData && !snapshot.hasError) {
+                                    return ListView.builder(
+                                      //physics:
+                                      //const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: _currentGame.getGames.length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                          child: GameCard(
+                                              gameName: _currentGame.getGamesMap[
+                                                      _currentGame.getGames[index]]
+                                                  ['name'],
+                                              year: _currentGame
+                                                  .getGamesMap[_currentGame.getGames[index]]
+                                                      ['year']
+                                                  .toString(),
+                                              cover: _currentGame.getGamesMap[
+                                                      _currentGame.getGames[index]]
+                                                  ['cover'],
+                                              filePath:
+                                                  _currentGame.getBytes[index]),
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    return Text('Done');
+                                  }
+                                  break;
+                                default:
+                                  return Text('ok');
+                                  break;
+                              }
+                            }),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
