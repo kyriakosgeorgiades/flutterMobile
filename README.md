@@ -1,31 +1,35 @@
-# GamesReviews
+# Table of contents
 
-A new Flutter project.
+- [General info](#general-info)
+- [Setup](#setup)
+- [Important](#important)
 
-## Getting Started
+## General Info
 
-FlutterFlow projects are built to run on the Flutter _stable_ release.
+This is the frontned for the mobile development course using flutter. The app can be run in both phone and web.
 
-### IMPORTANT:
+## Setup
 
-For projects with Firestore integration, you must first run the following commands to ensure the project compiles:
+git clone <https://github.coventry.ac.uk/7052CEM-2122/georgiadek-sem2-flutter.git>
+Install the plugins on Visual studio code "Dart" and "Flutter"
+Change the name of the directory from
 
 ```
+georgiadek-sem2-flutter to georgiadek_sem2_flutter
+```
+
+After the directory is updated follow this commands:
+
+```powershell
+cd georgiadek_sem2_flutter
 flutter pub get
-flutter packages pub run build_runner build --delete-conflicting-outputs
+flutter create .
+flutter run
 ```
 
-This command creates the generated files that parse each Record from Firestore into a schema object.
+Select the web options either `2` or `3`.
+You can run the project throught visual studio codio to trigger running it with an android emulator if you have it set it up.
 
-### Getting started continued:
+## Important
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Do not forget to change the name of the directory from `-` to `_` otherwise the project will not run.

@@ -17,7 +17,6 @@ class CallApi {
 
   postDataAuth(data, endpoint) async {
     var fullUrl = _url + endpoint;
-    print("URL: ${fullUrl}");
     String token = 'Bearer ' + data['token'];
     print("I am login token");
     print(token);
@@ -33,7 +32,6 @@ class CallApi {
 
   getData(endpoint) async {
     var fullUrl = _url + endpoint;
-    print("FULL URL: ${fullUrl}");
     return await htpp.get(Uri.parse(fullUrl), headers: {
       'Content-type': 'application/json',
       'Accept': 'application/json'

@@ -21,38 +21,32 @@ class ReviewCards extends StatelessWidget {
   Widget build(BuildContext context) {
     CurrentGames _currentGame =
         Provider.of<CurrentGames>(context, listen: false);
-    return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 10),
-      child: Container(
-        //height: 100,
-        decoration: BoxDecoration(
-          color: Color(0xFF2FD398),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Row(
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFF2FD398),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                    child: Text(
-                      "Reveiwed By: ",
-                      style: FlutterFlowTheme.of(context).bodyText1,
-                    ),
+                children: <Widget>[
+                  Text(
+                    "Reveiwed By: ",
+                    style: FlutterFlowTheme.of(context).bodyText1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 100),
-                    child: Text(reviewer,
-                        style: FlutterFlowTheme.of(context).subtitle2.override(
-                            fontFamily: 'Poppins', color: Colors.black)),
-                  ),
+                  Text(reviewer,
+                      style: FlutterFlowTheme.of(context).subtitle2.override(
+                          fontFamily: 'Poppins', color: Colors.black)),
+                  Spacer(),
                   Text(
                     "Rating: ",
                     textAlign: TextAlign.center,
@@ -68,41 +62,41 @@ class ReviewCards extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(
-                "Date: " + date,
-                style: FlutterFlowTheme.of(context)
-                    .subtitle2
-                    .override(fontFamily: 'Poppins', color: Colors.black),
-              ),
-              Container(
-                  decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 5, 26, 16),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: MarkdownBody(
-                          data: description,
-                          styleSheet: MarkdownStyleSheet(
-                            a: const TextStyle(color: Colors.white),
-                            p: const TextStyle(color: Colors.white),
-                            h1: const TextStyle(color: Colors.white),
-                            h2: const TextStyle(color: Colors.white),
-                            h3: const TextStyle(color: Colors.white),
-                            h4: const TextStyle(color: Colors.white),
-                            h5: const TextStyle(color: Colors.white),
-                            h6: const TextStyle(color: Colors.white),
-                          ),
+            ),
+            Text(
+              "Date: " + date,
+              style: FlutterFlowTheme.of(context)
+                  .subtitle2
+                  .override(fontFamily: 'Poppins', color: Colors.black),
+            ),
+            Container(
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 5, 26, 16),
+                    borderRadius: BorderRadius.circular(5)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: MarkdownBody(
+                        data: description,
+                        styleSheet: MarkdownStyleSheet(
+                          a: const TextStyle(color: Colors.white),
+                          p: const TextStyle(color: Colors.white),
+                          h1: const TextStyle(color: Colors.white),
+                          h2: const TextStyle(color: Colors.white),
+                          h3: const TextStyle(color: Colors.white),
+                          h4: const TextStyle(color: Colors.white),
+                          h5: const TextStyle(color: Colors.white),
+                          h6: const TextStyle(color: Colors.white),
                         ),
                       ),
-                    ],
-                  )),
-            ],
-          ),
+                    ),
+                  ],
+                )),
+          ],
         ),
       ),
     );

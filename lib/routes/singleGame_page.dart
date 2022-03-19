@@ -165,41 +165,68 @@ class _SingleGameVeiwWidgetState extends State<SingleGameVeiwWidget> {
                     ),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(16, 20, 16, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 0, 0, 8),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    elevation: 10,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.black,
+                      child: Expanded(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 0, 8),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      elevation: 10,
+                                      shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular((8.0)),
-                                        child: Image.memory(
-                                          filePath,
-                                          fit: BoxFit.cover,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular((8.0)),
+                                          child: Image.memory(
+                                            filePath,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Center(
-                                  child: FutureBuilder(
-                                      future: infoFuture,
+                                  Center(
+                                    child: FutureBuilder(
+                                        future: infoFuture,
+                                        builder: (context, snapshot) {
+                                          switch (snapshot.connectionState) {
+                                            case ConnectionState.waiting:
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            case ConnectionState.done:
+                                              return GameInfo(
+                                                year: snapshot.data['year']
+                                                    .toString(),
+                                                date: snapshot.data['date'],
+                                                publisher:
+                                                    snapshot.data['publisher'],
+                                                addedBy:
+                                                    snapshot.data['uploader'],
+                                                description: snapshot
+                                                    .data['description'],
+                                              );
+                                            default:
+                                              return null;
+                                          }
+                                        }),
+                                  ),
+                                  FutureBuilder(
+                                      future: reviewsFuture,
                                       builder: (context, snapshot) {
                                         switch (snapshot.connectionState) {
                                           case ConnectionState.waiting:
@@ -207,85 +234,209 @@ class _SingleGameVeiwWidgetState extends State<SingleGameVeiwWidget> {
                                                 child:
                                                     CircularProgressIndicator());
                                           case ConnectionState.done:
-                                            return GameInfo(
-                                              year: snapshot.data['year']
-                                                  .toString(),
-                                              date: snapshot.data['date'],
-                                              publisher:
-                                                  snapshot.data['publisher'],
-                                              addedBy:
-                                                  snapshot.data['uploader'],
-                                              description:
-                                                  snapshot.data['description'],
-                                            );
+                                            if (_currentUser.getToken != null) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: ListView.builder(
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  reverse: true,
+                                                  shrinkWrap: true,
+                                                  itemCount: _currentInfo
+                                                      .getReviewsIDs.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10),
+                                                      child: ReviewCards(
+                                                        reviewer: _currentInfo
+                                                            .getReviewsMap[_currentInfo
+                                                                .getReviewsIDs[
+                                                            index]]['reviewer'],
+                                                        rating: _currentInfo
+                                                                .getReviewsMap[
+                                                            _currentInfo
+                                                                    .getReviewsIDs[
+                                                                index]]['rating'],
+                                                        date: _currentInfo
+                                                                .getReviewsMap[
+                                                            _currentInfo
+                                                                    .getReviewsIDs[
+                                                                index]]['date'],
+                                                        description: _currentInfo
+                                                                .getReviewsMap[
+                                                            _currentInfo
+                                                                    .getReviewsIDs[
+                                                                index]]['review'],
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            } else {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(12.0),
+                                                child: FFButtonWidget(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pushNamed('/login');
+                                                    },
+                                                    text:
+                                                        'Login to view reviews',
+                                                    options: FFButtonOptions(
+                                                      width: 200,
+                                                      height: 40,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryColor,
+                                                      textStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .subtitle2
+                                                              .override(
+                                                                fontFamily:
+                                                                    'Poppins',
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                      borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent,
+                                                        width: 1,
+                                                      ),
+                                                      borderRadius: 12,
+                                                    )),
+                                              );
+                                            }
+                                            break;
                                           default:
-                                            return null;
+                                            return Text('done');
                                         }
                                       }),
-                                ),
-                                FutureBuilder(
-                                    future: reviewsFuture,
-                                    builder: (context, snapshot) {
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.waiting:
-                                          return Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        case ConnectionState.done:
-                                          if (_currentUser.getToken != null) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: ListView.builder(
-                                                physics:
-                                                    const NeverScrollableScrollPhysics(),
-                                                reverse: true,
-                                                shrinkWrap: true,
-                                                itemCount: _currentInfo
-                                                    .getReviewsIDs.length,
-                                                itemBuilder: (context, index) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            bottom: 10),
-                                                    child: ReviewCards(
-                                                      reviewer: _currentInfo
-                                                              .getReviewsMap[
-                                                          _currentInfo
-                                                                  .getReviewsIDs[
-                                                              index]]['reviewer'],
-                                                      rating: _currentInfo
-                                                              .getReviewsMap[
-                                                          _currentInfo
-                                                                  .getReviewsIDs[
-                                                              index]]['rating'],
-                                                      date: _currentInfo
-                                                              .getReviewsMap[
-                                                          _currentInfo
-                                                                  .getReviewsIDs[
-                                                              index]]['date'],
-                                                      description: _currentInfo
-                                                              .getReviewsMap[
-                                                          _currentInfo
-                                                                  .getReviewsIDs[
-                                                              index]]['review'],
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            );
-                                          } else {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(12.0),
-                                              child: FFButtonWidget(
-                                                  onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pushNamed('/login');
+                                  _currentUser.getToken != null
+                                      ? Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 15),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Color(0xFF2FD398),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            alignment:
+                                                AlignmentDirectional(0, -0.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: MarkdownTextInput(
+                                                      (String value) =>
+                                                          print('test'),
+                                                      description,
+                                                      controller: controller,
+                                                      maxLines: 5,
+                                                      actions:
+                                                          MarkdownType.values,
+                                                      label: 'Review'),
+                                                ),
+                                                Text(
+                                                  sliderValue == null
+                                                      ? '1'
+                                                      : sliderValue
+                                                          .toStringAsFixed(0),
+                                                  style:
+                                                      TextStyle(fontSize: 35),
+                                                ),
+                                                Slider(
+                                                  activeColor:
+                                                      Color(0xFF208DDD),
+                                                  inactiveColor:
+                                                      Color(0xFF673F3F),
+                                                  min: 1,
+                                                  max: 5,
+                                                  divisions: 4,
+                                                  value: sliderValue ??= 1,
+                                                  onChanged: (newValue) {
+                                                    setState(() =>
+                                                        sliderValue = newValue);
                                                   },
-                                                  text: 'Login to view reviews',
+                                                ),
+                                                FFButtonWidget(
+                                                  onPressed: () {
+                                                    print(
+                                                        'Button prefssddsfssed ...');
+                                                    List<String> missing = [];
+                                                    Map<String, dynamic>
+                                                        newReview = {};
+                                                    newReview.addAll({
+                                                      'userID':
+                                                          _currentUser.getUid,
+                                                      'rate':
+                                                          sliderValue.round(),
+                                                      'description':
+                                                          controller.text,
+                                                      'token':
+                                                          _currentUser.getToken,
+                                                    });
+
+                                                    newReview
+                                                        .forEach((key, value) {
+                                                      if ((value == null ||
+                                                          value == '')) {
+                                                        missing.add(key);
+                                                      }
+                                                    });
+                                                    if (missing.isNotEmpty) {
+                                                      var stringList =
+                                                          missing.join(", ");
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(SnackBar(
+                                                              content: Text(
+                                                                  "Missing ${stringList}"),
+                                                              duration:
+                                                                  Duration(
+                                                                      seconds:
+                                                                          4)));
+                                                    } else {
+                                                      setState(() {
+                                                        isApiResponse = true;
+                                                      });
+                                                      CallApi().postDataAuth(
+                                                          newReview,
+                                                          'games' +
+                                                              '/' +
+                                                              '${_currentGame.getSingleGame}' +
+                                                              '/' +
+                                                              'reviews');
+
+                                                      Future.delayed(
+                                                          Duration(seconds: 3),
+                                                          () async {
+                                                        setState(() {
+                                                          isApiResponse = false;
+                                                        });
+                                                        await _currentInfo
+                                                            .reviewsGame(
+                                                                _currentGame
+                                                                    .getSingleGame);
+                                                        rebuildAllChildren(
+                                                            context);
+                                                      });
+                                                    }
+                                                  },
+                                                  text: 'Sumbit Review',
                                                   options: FFButtonOptions(
-                                                    width: 200,
+                                                    width: 180,
                                                     height: 40,
                                                     color: FlutterFlowTheme.of(
                                                             context)
@@ -302,181 +453,45 @@ class _SingleGameVeiwWidgetState extends State<SingleGameVeiwWidget> {
                                                       width: 1,
                                                     ),
                                                     borderRadius: 12,
-                                                  )),
-                                            );
-                                          }
-                                          break;
-                                        default:
-                                          return Text('done');
-                                      }
-                                    }),
-                                _currentUser.getToken != null
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(top: 15),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFF2FD398),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          alignment:
-                                              AlignmentDirectional(0, -0.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: MarkdownTextInput(
-                                                    (String value) =>
-                                                        print('test'),
-                                                    description,
-                                                    controller: controller,
-                                                    maxLines: 5,
-                                                    actions:
-                                                        MarkdownType.values,
-                                                    label: 'Review'),
-                                              ),
-                                              Text(
-                                                sliderValue == null
-                                                    ? '1'
-                                                    : sliderValue
-                                                        .toStringAsFixed(0),
-                                                style: TextStyle(fontSize: 35),
-                                              ),
-                                              Slider(
-                                                activeColor: Color(0xFF208DDD),
-                                                inactiveColor:
-                                                    Color(0xFF673F3F),
-                                                min: 1,
-                                                max: 5,
-                                                divisions: 4,
-                                                value: sliderValue ??= 1,
-                                                onChanged: (newValue) {
-                                                  setState(() =>
-                                                      sliderValue = newValue);
-                                                },
-                                              ),
-                                              FFButtonWidget(
-                                                onPressed: () {
-                                                  print(
-                                                      'Button prefssddsfssed ...');
-                                                  List<String> missing = [];
-                                                  Map<String, dynamic>
-                                                      newReview = {};
-                                                  newReview.addAll({
-                                                    'userID':
-                                                        _currentUser.getUid,
-                                                    'rate': sliderValue.round(),
-                                                    'description':
-                                                        controller.text,
-                                                    'token':
-                                                        _currentUser.getToken,
-                                                  });
-
-                                                  newReview
-                                                      .forEach((key, value) {
-                                                    if ((value == null ||
-                                                        value == '')) {
-                                                      missing.add(key);
-                                                    }
-                                                  });
-                                                  if (missing.isNotEmpty) {
-                                                    var stringList =
-                                                        missing.join(", ");
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(SnackBar(
-                                                            content: Text(
-                                                                "Missing ${stringList}"),
-                                                            duration: Duration(
-                                                                seconds: 4)));
-                                                  } else {
-                                                    setState(() {
-                                                      isApiResponse = true;
-                                                    });
-                                                    CallApi().postDataAuth(
-                                                        newReview,
-                                                        'games' +
-                                                            '/' +
-                                                            '${_currentGame.getSingleGame}' +
-                                                            '/' +
-                                                            'reviews');
-
-                                                    Future.delayed(
-                                                        Duration(seconds: 3),
-                                                        () async {
-                                                      setState(() {
-                                                        isApiResponse = false;
-                                                      });
-                                                      await _currentInfo
-                                                          .reviewsGame(
-                                                              _currentGame
-                                                                  .getSingleGame);
-                                                      rebuildAllChildren(
-                                                          context);
-                                                    });
-                                                  }
-                                                },
-                                                text: 'Sumbit Review',
-                                                options: FFButtonOptions(
-                                                  width: 180,
-                                                  height: 40,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryColor,
-                                                  textStyle: FlutterFlowTheme
-                                                          .of(context)
-                                                      .subtitle2
-                                                      .override(
-                                                        fontFamily: 'Poppins',
-                                                        color: Colors.white,
-                                                      ),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.transparent,
-                                                    width: 1,
                                                   ),
-                                                  borderRadius: 12,
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      )
-                                    : Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: FFButtonWidget(
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .pushNamed('/login');
-                                            },
-                                            text: 'Login to leave a review',
-                                            options: FFButtonOptions(
-                                              width: 200,
-                                              height: 40,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryColor,
-                                              textStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .subtitle2
-                                                      .override(
-                                                        fontFamily: 'Poppins',
-                                                        color: Colors.white,
-                                                      ),
-                                              borderSide: BorderSide(
-                                                color: Colors.transparent,
-                                                width: 1,
-                                              ),
-                                              borderRadius: 12,
-                                            )),
-                                      )
-                              ],
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: FFButtonWidget(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pushNamed('/login');
+                                              },
+                                              text: 'Login to leave a review',
+                                              options: FFButtonOptions(
+                                                width: 200,
+                                                height: 40,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryColor,
+                                                textStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .subtitle2
+                                                        .override(
+                                                          fontFamily: 'Poppins',
+                                                          color: Colors.white,
+                                                        ),
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1,
+                                                ),
+                                                borderRadius: 12,
+                                              )),
+                                        )
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
