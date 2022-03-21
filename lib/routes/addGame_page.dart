@@ -226,7 +226,7 @@ class _AddGameWidgetState extends State<AddGameWidget> {
                             ),
                             Text(
                               sliderValue == null
-                                  ? '2021'
+                                  ? '2022'
                                   : sliderValue.toStringAsFixed(0),
                               style: TextStyle(fontSize: 35),
                             ),
