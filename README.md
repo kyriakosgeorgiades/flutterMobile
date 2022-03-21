@@ -33,3 +33,4 @@ You can run the project throught visual studio codio to trigger running it with 
 ## Important
 
 Do not forget to change the name of the directory from `-` to `_` otherwise the project will not run.
+Since the app is hosted on a free service due to the inactivity the request will be a bit slow the first time untill it changes state from sleep to active. Please give it a few seconds to change a state when making the first request in a while!
